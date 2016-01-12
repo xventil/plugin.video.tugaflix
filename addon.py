@@ -107,28 +107,28 @@ def listar_filmes(url):
         match=re.compile('<div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4"> <a href="(.+?)" class="browse-movie-link"> <figure> <img class="img-responsive" src="(.+?)" alt="(.+?)"> <figcaption class="hidden-xs hidden-sm"><i class="fa fa-star-o"></i></span> <h4 class="rating">.+?</h4> <h6>.+?</h6> <span class="button-green-download-big">Ver Online</span> </figcaption> </figure> </a> <div class="browse-movie-bottom"> <a href=".+?" class="browse-movie-title">.+?</a> <div class="browse-movie-year">.+?</div> </div> </div>').findall(codigo_fonte)
         for url, img, titulo in match:
             addDir(titulo,'http://tugaflix.com/'+ url,2,'http://tugaflix.com/'+img,False)
-        #match = re.compile('.*.+?href="(.+?)">Seguinte »</a>').findall(codigo_fonte)
-        #for next_page in match:
+        match = re.compile('<ul class="tsc_pagination tsc_paginationA tsc_paginationA06">.+?<a href="(.+?)">Seguinte »</a></li></ul></div>').findall(codigo_fonte)
+        for next_page in match:
         #    print next_page
-        #    addDir('Proximo >>','http://tugaflix.com/'+ next_page,1,'')
+            addDir('Proximo >>','http://tugaflix.com/'+ next_page,1,'')
 
 def listar_series(url):
         codigo_fonte = abrir_url(url)
         match=re.compile('<figure> <img class="img-responsive" src="(.+?)" alt="(.+?)"> <figcaption class="hidden-xs hidden-sm"><i class="fa fa-star"></i></span> <h4 class="rating">.+?</h4> <h6>.+?</h6> <span class="button-green-download-big">Ver Online</span> </figcaption> </figure> </a> <div class="browse-movie-bottom"> <a href="(.+?)" class="browse-movie-title">.+?</a> <div class="browse-movie-year">.+?</div> </div> </div><div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4"> <a href=".+?" class="browse-movie-link"> ').findall(codigo_fonte)
         for img, titulo, url in match:
             addDir(titulo,'http://tugaflix.com/'+ url,4,'http://tugaflix.com/'+img,True)
-        #match = re.compile('.*.+?href="(.+?)">Seguinte »</a>').findall(codigo_fonte)
+        match = re.compile('<ul class="tsc_pagination tsc_paginationA tsc_paginationA06">.+?<a href="(.+?)">Seguinte »</a></li></ul></div>').findall(codigo_fonte)
         #for next_page in match:
-        #    print next_page
-        #    addDir('Proximo >>','http://tugaflix.com/'+ next_page,1,'')
+            print next_page
+            addDir('Proximo >>','http://tugaflix.com/'+ next_page,1,'')
 
 def listar_episodios(url):
         codigo_fonte = abrir_url(url)
         match=re.compile('<a class="browse-movie-link" href="(.+?)"><figure><img class="img-responsiveeps" src="(.+?)"><figcaptioneps><h4 class="grelhaeps1">(.+?)</h4><h6 class="grelhaeps2">.+?</h6></figcaptioneps></figure></a>').findall(codigo_fonte)
         for url,img, titulo in match:
-            print url
-            print titulo
-            print 'chego aqui sem erros'
+        #    print url
+        #    print titulo
+        #    print 'chego aqui sem erros'
             addDir(titulo,'http://tugaflix.com'+ url,2,'http://tugaflix.com/'+img,False)
 
 def encontrar_fontes(url):
