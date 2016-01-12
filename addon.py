@@ -118,8 +118,8 @@ def listar_series(url):
         for img, titulo, url in match:
             addDir(titulo,'http://tugaflix.com/'+ url,4,'http://tugaflix.com/'+img,True)
         match = re.compile('<ul class="tsc_pagination tsc_paginationA tsc_paginationA06">.+?<a href="(.+?)">Seguinte »</a></li></ul></div>').findall(codigo_fonte)
-        #for next_page in match:
-            print next_page
+        for next_page in match:
+        #    print next_page
             addDir('Proximo >>','http://tugaflix.com/'+ next_page,1,'')
 
 def listar_episodios(url):
