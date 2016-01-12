@@ -23,7 +23,7 @@ h = HTMLParser.HTMLParser()
 
 
 addon_id = 'plugin.video.tugaflix'
-addon_version = '0.1.0'
+addon_version = '0.1.5'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = '/resources/img/'
@@ -38,6 +38,7 @@ def CATEGORIES():
     addDir('Series','http://tugaflix.com/Series',6,'http://img4.wikia.nocookie.net/__cb20100319190057/anythingforeveryone/images/4/43/Television_300x300_icon.png')
     addLink('','','',0,'')
     addDir('Pesquisar Filmes','http://tugaflix.com/Filmes',7,'')
+    addDir('Pesquisar Series - WIP','http://tugaflix.com/Series',8,'')
     addLink('','','',0,'')
     addDir('TugaFlix Unofficial (Versão: '+addon_version+')','',0,'')
 
@@ -104,23 +105,23 @@ def abrir_video(video):
 
 def listar_filmes(url):
         codigo_fonte = abrir_url(url)
-        match=re.compile('<div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4"> <a href="(.+?)" class="browse-movie-link"> <figure> <img class="img-responsive" src="(.+?)" alt="(.+?)"> <figcaption class="hidden-xs hidden-sm"><i class="fa fa-star-o"></i></span> <h4 class="rating">.+?</h4> <h6>.+?</h6> <span class="button-green-download-big">Ver Online</span> </figcaption> </figure> </a> <div class="browse-movie-bottom"> <a href=".+?" class="browse-movie-title">.+?</a> <div class="browse-movie-year">.+?</div> </div> </div>').findall(codigo_fonte)
+        match=re.compile('<div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4"> <a href="(.+?)" class="browse-movie-link"> <figure> <img class="img-responsive" src="(.+?)" alt="(.+?)"> <figcaption class="hidden-xs hidden-sm"><i class=".+?"></i></span> <h4 class="rating">.+?</h4> <h6>.+?</h6> <span class="button-green-download-big">Ver Online</span> </figcaption> </figure> </a> <div class="browse-movie-bottom"> <a href=".+?" class="browse-movie-title">.+?</a> <div class="browse-movie-year">.+?</div> </div> </div>').findall(codigo_fonte)
         for url, img, titulo in match:
             addDir(titulo,'http://tugaflix.com/'+ url,2,'http://tugaflix.com/'+img,False)
         match = re.compile('<ul class="tsc_pagination tsc_paginationA tsc_paginationA06">.+?<a href="(.+?)">Seguinte »</a></li></ul></div>').findall(codigo_fonte)
         for next_page in match:
-        #    print next_page
             addLink('','','',0,'')
             addDir('Proximo >>','http://tugaflix.com/'+ next_page,1,'')
 
 def listar_series(url):
         codigo_fonte = abrir_url(url)
-        match=re.compile('<figure> <img class="img-responsive" src="(.+?)" alt="(.+?)"> <figcaption class="hidden-xs hidden-sm"><i class="fa fa-star"></i></span> <h4 class="rating">.+?</h4> <h6>.+?</h6> <span class="button-green-download-big">Ver Online</span> </figcaption> </figure> </a> <div class="browse-movie-bottom"> <a href="(.+?)" class="browse-movie-title">.+?</a> <div class="browse-movie-year">.+?</div> </div> </div><div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4"> <a href=".+?" class="browse-movie-link"> ').findall(codigo_fonte)
-        for img, titulo, url in match:
+        #match=re.compile('<figure> <img class="img-responsive" src="(.+?)" alt="(.+?)"> <figcaption class="hidden-xs hidden-sm"><i class="fa fa-star"></i></span> <h4 class="rating">.+?</h4> <h6>.+?</h6> <span class="button-green-download-big">Ver Online</span> </figcaption> </figure> </a> <div class="browse-movie-bottom"> <a href="(.+?)" class="browse-movie-title">.+?</a> <div class="browse-movie-year">.+?</div> </div> </div><div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4"> <a href=".+?" class="browse-movie-link"> ').findall(codigo_fonte)
+        #match=re.compile('<a href="(.+?)" class="browse-movie-link"> <figure> <img class="img-responsive" src="(.+?)" alt="(.+?)"> <figcaption class="hidden-xs hidden-sm"><i class=".+?"></i></span> <h4 class="rating">.+?</h4> <h6>.+?</h6> <span class="button-green-download-big">Ver Online</span> </figcaption> </figure> </a> <div class="browse-movie-bottom"> <a href=".+?" class="browse-movie-title">.+?</a> <div class="browse-movie-year">.+?</div> </div> </div><div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4">').findall(codigo_fonte)
+        match=re.compile('<div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4"> <a href="(.+?)" class="browse-movie-link"> <figure> <img class="img-responsive" src="(.+?)" alt="(.+?)"> <figcaption class="hidden-xs hidden-sm"><i class=".+?"></i></span> <h4 class="rating">.+?</h4> <h6>.+?</h6> <span class="button-green-download-big">Ver Online</span> </figcaption> </figure> </a> <div class="browse-movie-bottom"> <a href=".+?" class="browse-movie-title">.+?</a> <div class="browse-movie-year">.+?</div> </div> </div>').findall(codigo_fonte)
+        for url, img, titulo in match:
             addDir(titulo,'http://tugaflix.com/'+ url,4,'http://tugaflix.com/'+img,True)
         match = re.compile('<ul class="tsc_pagination tsc_paginationA tsc_paginationA06">.+?<a href="(.+?)">Seguinte »</a></li></ul></div>').findall(codigo_fonte)
         for next_page in match:
-        #    print next_page
             addLink('','','',0,'')
             addDir('Proximo >>','http://tugaflix.com/'+ next_page,1,'')
 
@@ -128,9 +129,6 @@ def listar_episodios(url):
         codigo_fonte = abrir_url(url)
         match=re.compile('<a class="browse-movie-link" href="(.+?)"><figure><img class="img-responsiveeps" src="(.+?)"><figcaptioneps><h4 class="grelhaeps1">(.+?)</h4><h6 class="grelhaeps2">.+?</h6></figcaptioneps></figure></a>').findall(codigo_fonte)
         for url,img, titulo in match:
-        #    print url
-        #    print titulo
-        #    print 'chego aqui sem erros'
             addDir(titulo,'http://tugaflix.com'+ url,2,'http://tugaflix.com/'+img,False)
 
 def encontrar_fontes(url):
@@ -151,8 +149,16 @@ def pesquisa_filmes():
         search = keyb.getText()
         parametro_pesquisa=urllib.quote(search)
     url = 'http://tugaflix.com/Filmes?T='+str(parametro_pesquisa)+'&G=&O=1'
-    print url
     listar_filmes(url)
+    
+def pesquisa_series():
+    keyb = xbmc.Keyboard('','Escreva a Serie a Pesquisar')
+    keyb.doModal()
+    if (keyb.isConfirmed()):
+        search = keyb.getText()
+        parametro_pesquisa=urllib.quote(search)
+    url = 'http://tugaflix.com/Series?T='+str(parametro_pesquisa)+'&G=&O=1'
+    listar_series(url)
 
 
 ###################################################################################
@@ -249,11 +255,11 @@ if mode==None or url==None or len(url)<1:
     CATEGORIES()
 
 elif mode==1:
-    print "que nervos"
+    print ""
     listar_filmes(url)
 
 elif mode==2:
-    print "estou aqui no modo 2"
+    print ""
     encontrar_fontes(url)
 
 elif mode==3:
@@ -276,5 +282,8 @@ elif mode ==7:
     print""
     pesquisa_filmes()
 
+elif mode ==8:
+    print""
+    pesquisa_series()
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
