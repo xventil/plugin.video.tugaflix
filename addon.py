@@ -110,6 +110,7 @@ def listar_filmes(url):
         match = re.compile('<ul class="tsc_pagination tsc_paginationA tsc_paginationA06">.+?<a href="(.+?)">Seguinte »</a></li></ul></div>').findall(codigo_fonte)
         for next_page in match:
         #    print next_page
+            addLink('','','',0,'')
             addDir('Proximo >>','http://tugaflix.com/'+ next_page,1,'')
 
 def listar_series(url):
@@ -120,6 +121,7 @@ def listar_series(url):
         match = re.compile('<ul class="tsc_pagination tsc_paginationA tsc_paginationA06">.+?<a href="(.+?)">Seguinte »</a></li></ul></div>').findall(codigo_fonte)
         for next_page in match:
         #    print next_page
+            addLink('','','',0,'')
             addDir('Proximo >>','http://tugaflix.com/'+ next_page,1,'')
 
 def listar_episodios(url):
