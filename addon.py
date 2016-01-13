@@ -23,7 +23,7 @@ h = HTMLParser.HTMLParser()
 
 
 addon_id = 'plugin.video.tugaflix'
-addon_version = '0.1.5'
+addon_version = '0.2.0'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = '/resources/img/'
@@ -38,7 +38,7 @@ def CATEGORIES():
     addDir('Series','http://tugaflix.com/Series',6,'http://img4.wikia.nocookie.net/__cb20100319190057/anythingforeveryone/images/4/43/Television_300x300_icon.png')
     addLink('','','',0,'')
     addDir('Pesquisar Filmes','http://tugaflix.com/Filmes',7,'')
-    addDir('Pesquisar Series - WIP','http://tugaflix.com/Series',8,'')
+    addDir('Pesquisar Series','http://tugaflix.com/Series',8,'')
     addLink('','','',0,'')
     addDir('TugaFlix Unofficial (Versão: '+addon_version+')','',0,'')
 
@@ -93,11 +93,12 @@ def SUB_CAT_SERIES():
 #FUNCOES
 
 
-def abrir_video(video):
+def abrir_video(video,subtitle):
      print "funcao abrir_video"
      try:
          xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
          xbmcPlayer.play(video)
+         xbmc.Player().setSubtitles(subtitle)         
 		 
      except:
          pass
@@ -137,9 +138,12 @@ def encontrar_fontes(url):
     match = re.compile('<source src="(.+?)" type="video/mp4" data-res="servidor.02">').findall(codigo_fonte)
     for ficheiro in match:
 	ficheiro = ficheiro.replace('Video?V=http://servidor.02/','')
+    match =re.compile('<track src="(.+?)" kind="captions" srclang="pt" label="pt-pt">').findall(codigo_fonte)
+    for legenda in match:
         print 'vamos la ver:' + ficheiro
         final = 'http://filehoot.com/vidembed-'+ficheiro+'.mp4'
-        abrir_video(final)
+        legenda = 'http://tugaflix.com/'+legenda
+        abrir_video(final,legenda)
 	
 
 def pesquisa_filmes():
