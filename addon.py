@@ -23,7 +23,7 @@ h = HTMLParser.HTMLParser()
 
 
 addon_id = 'plugin.video.tugaflix'
-addon_version = '0.2.0'
+addon_version = '0.1.5'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = '/resources/img/'
@@ -106,7 +106,7 @@ def abrir_video(video,subtitle):
 
 def listar_filmes(url):
         codigo_fonte = abrir_url(url)
-        match=re.compile('<div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4"> <a href="(.+?)" class="browse-movie-link"> <figure> <img class="img-responsive" src="(.+?)" alt="(.+?)"> <figcaption class="hidden-xs hidden-sm"><i class=".+?"></i></span> <h4 class="rating">.+?</h4> <h6>.+?</h6> <span class="button-green-download-big">Ver Online</span> </figcaption> </figure> </a> <div class="browse-movie-bottom"> <a href=".+?" class="browse-movie-title">.+?</a> <div class="browse-movie-year">.+?</div> </div> </div>').findall(codigo_fonte)
+        match=re.compile('<div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4">\s<a href="(.+?)" class="browse-movie-link">\s<figure>\s<img class="img-responsive" src="(.+?)" alt="(.+?)">').findall(codigo_fonte)
         for url, img, titulo in match:
             addDir(titulo,'http://tugaflix.com/'+ url,2,'http://tugaflix.com/'+img,False)
         match = re.compile('<ul class="tsc_pagination tsc_paginationA tsc_paginationA06">.+?<a href="(.+?)">Seguinte »</a></li></ul></div>').findall(codigo_fonte)
@@ -116,9 +116,9 @@ def listar_filmes(url):
 
 def listar_series(url):
         codigo_fonte = abrir_url(url)
-        #match=re.compile('<figure> <img class="img-responsive" src="(.+?)" alt="(.+?)"> <figcaption class="hidden-xs hidden-sm"><i class="fa fa-star"></i></span> <h4 class="rating">.+?</h4> <h6>.+?</h6> <span class="button-green-download-big">Ver Online</span> </figcaption> </figure> </a> <div class="browse-movie-bottom"> <a href="(.+?)" class="browse-movie-title">.+?</a> <div class="browse-movie-year">.+?</div> </div> </div><div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4"> <a href=".+?" class="browse-movie-link"> ').findall(codigo_fonte)
+        match=re.compile('<div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4">\s<a href="(.+?)" class="browse-movie-link">\s<figure>\s<img class="img-responsive" src="(.+?)" alt="(.+?)">').findall(codigo_fonte)
         #match=re.compile('<a href="(.+?)" class="browse-movie-link"> <figure> <img class="img-responsive" src="(.+?)" alt="(.+?)"> <figcaption class="hidden-xs hidden-sm"><i class=".+?"></i></span> <h4 class="rating">.+?</h4> <h6>.+?</h6> <span class="button-green-download-big">Ver Online</span> </figcaption> </figure> </a> <div class="browse-movie-bottom"> <a href=".+?" class="browse-movie-title">.+?</a> <div class="browse-movie-year">.+?</div> </div> </div><div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4">').findall(codigo_fonte)
-        match=re.compile('<div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4"> <a href="(.+?)" class="browse-movie-link"> <figure> <img class="img-responsive" src="(.+?)" alt="(.+?)"> <figcaption class="hidden-xs hidden-sm"><i class=".+?"></i></span> <h4 class="rating">.+?</h4> <h6>.+?</h6> <span class="button-green-download-big">Ver Online</span> </figcaption> </figure> </a> <div class="browse-movie-bottom"> <a href=".+?" class="browse-movie-title">.+?</a> <div class="browse-movie-year">.+?</div> </div> </div>').findall(codigo_fonte)
+        #match=re.compile('<div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4"> <a href="(.+?)" class="browse-movie-link"> <figure> <img class="img-responsive" src="(.+?)" alt="(.+?)"> <figcaption class="hidden-xs hidden-sm"><i class=".+?"></i></span> <h4 class="rating">.+?</h4> <h6>.+?</h6> <span class="button-green-download-big">Ver Online</span> </figcaption> </figure> </a> <div class="browse-movie-bottom"> <a href=".+?" class="browse-movie-title">.+?</a> <div class="browse-movie-year">.+?</div> </div> </div>').findall(codigo_fonte)
         for url, img, titulo in match:
             addDir(titulo,'http://tugaflix.com/'+ url,4,'http://tugaflix.com/'+img,True)
         match = re.compile('<ul class="tsc_pagination tsc_paginationA tsc_paginationA06">.+?<a href="(.+?)">Seguinte »</a></li></ul></div>').findall(codigo_fonte)
@@ -128,23 +128,44 @@ def listar_series(url):
 
 def listar_episodios(url):
         codigo_fonte = abrir_url(url)
-        match=re.compile('<a class="browse-movie-link" href="(.+?)"><figure><img class="img-responsiveeps" src="(.+?)"><figcaptioneps><h4 class="grelhaeps1">(.+?)</h4><h6 class="grelhaeps2">.+?</h6></figcaptioneps></figure></a>').findall(codigo_fonte)
+        match=re.compile('<a class="browse-movie-link" href="(.+?)"><figure><img class="img-respisode" src="(.+?)"><figcapepisode><h4 class="gridepisode1">(.+?)</h4><h6 class="gridepisode2">.+?</h6></figcapepisode></figure></a>').findall(codigo_fonte)
         for url,img, titulo in match:
             addDir(titulo,'http://tugaflix.com'+ url,2,'http://tugaflix.com/'+img,False)
 
 def encontrar_fontes(url):
     codigo_fonte=abrir_url(url)
-    print url
+    print url + " aqui vamos"
     match = re.compile('<source src="(.+?)" type="video/mp4" data-res="servidor.02">').findall(codigo_fonte)
+    if not match:
+        encontrar_fontes_openload(url+"&C")
+    else:
+        for ficheiro in match:
+            ficheiro = ficheiro.replace('Video?V=http://servidor.02/','')
+            match =re.compile('<track src="(.+?)" kind="captions" srclang="pt" label="pt-pt">').findall(codigo_fonte)
+        for legenda in match:
+            print 'vamos la ver:' + ficheiro
+            final = 'http://filehoot.com/vidembed-'+ficheiro+'.mp4'
+            legenda = 'http://tugaflix.com/'+legenda
+            abrir_video(final,legenda)
+
+    
+def encontrar_fontes_openload(url):
+    codigo_fonte=abrir_url(url)
+    print url
+    match = re.compile('<script type="text/javascript" src="(.+?)"></script>').findall(codigo_fonte)
+    for captcha in match:
+        captcha = captcha.replace('https://www.google.com/recaptcha/api/challenge?k=','https://www.google.com/recaptcha/api/noscript?k=')
+        print captcha + " teste"
+        import urlresolver
+        teste=urlresolver.resolve(captcha)
+        print teste
+    match = re.compile('<iframe src="(.+?)" scrolling="no" frameborder="0" width="100%" height="484px" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>').findall(codigo_fonte)
     for ficheiro in match:
-	ficheiro = ficheiro.replace('Video?V=http://servidor.02/','')
-    match =re.compile('<track src="(.+?)" kind="captions" srclang="pt" label="pt-pt">').findall(codigo_fonte)
-    for legenda in match:
-        print 'vamos la ver:' + ficheiro
-        final = 'http://filehoot.com/vidembed-'+ficheiro+'.mp4'
-        legenda = 'http://tugaflix.com/'+legenda
-        abrir_video(final,legenda)
-	
+        ficheiro = ficheiro.replace('https://openload.co','http://openload.io')
+        import urlresolver
+        stream_url = urlresolver.resolve(ficheiro)
+        print stream_url
+        abrir_video(stream_url,'')
 
 def pesquisa_filmes():
     keyb = xbmc.Keyboard('','Escreva o Filme a Pesquisar')
