@@ -18,12 +18,12 @@
 
 ##############BIBLIOTECAS A IMPORTAR E DEFINICOES####################
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,xbmc,xbmcaddon,HTMLParser
+import urllib,urllib2,urlparse,re,xbmcplugin,xbmcgui,xbmc,xbmcaddon,HTMLParser
 h = HTMLParser.HTMLParser()
 
 
 addon_id = 'plugin.video.tugaflix'
-addon_version = '0.1.5'
+addon_version = '0.4.5'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = '/resources/img/'
@@ -117,8 +117,6 @@ def listar_filmes(url):
 def listar_series(url):
         codigo_fonte = abrir_url(url)
         match=re.compile('<div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4">\s<a href="(.+?)" class="browse-movie-link">\s<figure>\s<img class="img-responsive" src="(.+?)" alt="(.+?)">').findall(codigo_fonte)
-        #match=re.compile('<a href="(.+?)" class="browse-movie-link"> <figure> <img class="img-responsive" src="(.+?)" alt="(.+?)"> <figcaption class="hidden-xs hidden-sm"><i class=".+?"></i></span> <h4 class="rating">.+?</h4> <h6>.+?</h6> <span class="button-green-download-big">Ver Online</span> </figcaption> </figure> </a> <div class="browse-movie-bottom"> <a href=".+?" class="browse-movie-title">.+?</a> <div class="browse-movie-year">.+?</div> </div> </div><div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4">').findall(codigo_fonte)
-        #match=re.compile('<div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4"> <a href="(.+?)" class="browse-movie-link"> <figure> <img class="img-responsive" src="(.+?)" alt="(.+?)"> <figcaption class="hidden-xs hidden-sm"><i class=".+?"></i></span> <h4 class="rating">.+?</h4> <h6>.+?</h6> <span class="button-green-download-big">Ver Online</span> </figcaption> </figure> </a> <div class="browse-movie-bottom"> <a href=".+?" class="browse-movie-title">.+?</a> <div class="browse-movie-year">.+?</div> </div> </div>').findall(codigo_fonte)
         for url, img, titulo in match:
             addDir(titulo,'http://tugaflix.com/'+ url,4,'http://tugaflix.com/'+img,True)
         match = re.compile('<ul class="tsc_pagination tsc_paginationA tsc_paginationA06">.+?<a href="(.+?)">Seguinte »</a></li></ul></div>').findall(codigo_fonte)
@@ -135,6 +133,7 @@ def listar_episodios(url):
 def encontrar_fontes(url):
     codigo_fonte=abrir_url(url)
     print url + " aqui vamos"
+    #print codigo_fonte
     match = re.compile('<source src="(.+?)" type="video/mp4" data-res="servidor.02">').findall(codigo_fonte)
     if not match:
         encontrar_fontes_openload(url+"&C")
@@ -148,24 +147,54 @@ def encontrar_fontes(url):
             legenda = 'http://tugaflix.com/'+legenda
             abrir_video(final,legenda)
 
-    
 def encontrar_fontes_openload(url):
     codigo_fonte=abrir_url(url)
-    print url
-    match = re.compile('<script type="text/javascript" src="(.+?)"></script>').findall(codigo_fonte)
+    match = re.compile('<iframe src="(.+?)" frameborder="0"></iframe><br>').findall(codigo_fonte)
     for captcha in match:
-        captcha = captcha.replace('https://www.google.com/recaptcha/api/challenge?k=','https://www.google.com/recaptcha/api/noscript?k=')
-        print captcha + " teste"
-        import urlresolver
-        teste=urlresolver.resolve(captcha)
-        print teste
-    match = re.compile('<iframe src="(.+?)" scrolling="no" frameborder="0" width="100%" height="484px" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>').findall(codigo_fonte)
-    for ficheiro in match:
-        ficheiro = ficheiro.replace('https://openload.co','http://openload.io')
-        import urlresolver
-        stream_url = urlresolver.resolve(ficheiro)
-        print stream_url
-        abrir_video(stream_url,'')
+        codigo_fonte=abrir_url(captcha)
+        imagem = re.compile('value="(.+)">\n<center><img width=".+?" height=".+?" alt="" src="(.+?)"></center>').findall(codigo_fonte)
+        for recaptcher, link in imagem:
+            capimg = "http://www.google.com/recaptcha/api/"+link
+            if capimg:
+                img = xbmcgui.ControlImage(550, 20, 600, 114, capimg)
+                dlg = xbmcgui.WindowDialog()
+                dlg.addControl(img)
+                dlg.show()
+                kb = xbmc.Keyboard('', 'Type the letters in the image', False)
+                kb.doModal()
+                kbinput = kb.getText()
+                dlg.close()
+                data1 = urllib.urlencode({'recaptcha_challenge_field': recaptcher, 'recaptcha_response_field': kbinput})
+                data1 = data1.encode('ascii')
+                req1 = urllib2.Request(captcha, data1)
+                req1.add_header('User-Agent','Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:56.0) Gecko/20100101 Firefox/56.0')
+                response1 = urllib2.urlopen(req1)
+                link1 = response1.read()
+                response1.close()
+                captchaCode = re.findall('<textarea rows="5" cols="100">(.+?)</textarea>', str(link1))
+                for recap1 in captchaCode:
+                    print('\nCaptcha Reply Code:\n' + recap1 + '\n')
+                # E pronto, neste momento temos a confirmação de que o captcha está correcto e recebemos o código de confirmação para usar na página do filme
+                data2 = urllib.urlencode(
+                    {'recaptcha_challenge_field': recap1, 'recaptcha_response_field': 'manual_challenge'})
+                data2 = data2.encode('ascii')
+                req2 = urllib2.Request(url, data2)
+                req2.add_header('User-Agent',
+                                'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:56.0) Gecko/20100101 Firefox/56.0')
+                response2 = urllib2.urlopen(req2)
+                link2 = response2.read()
+                response2.close()
+                movieCode = re.findall('<iframe src="(.+?)mp4..c1_file=(.+?)&c1', str(link2))
+                for ficheiro, legenda in movieCode:
+                    resolve_openload(ficheiro, legenda)
+
+
+def resolve_openload(url, legenda):
+    url = url.replace('https://openload.co', 'http://openload.io')
+    import urlresolver
+    stream_url = urlresolver.resolve(url)
+    print stream_url
+    abrir_video(stream_url, legenda)
 
 def pesquisa_filmes():
     keyb = xbmc.Keyboard('','Escreva o Filme a Pesquisar')
@@ -184,7 +213,6 @@ def pesquisa_series():
         parametro_pesquisa=urllib.quote(search)
     url = 'http://tugaflix.com/Series?T='+str(parametro_pesquisa)+'&G=&O=1'
     listar_series(url)
-
 
 ###################################################################################
 #FUNCOES JÃ FEITAS

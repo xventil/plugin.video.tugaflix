@@ -12,5 +12,3 @@ for now the addon supports;
  browse with categories
  
  hope you enjoy it!
- 
- Need help with captcha
