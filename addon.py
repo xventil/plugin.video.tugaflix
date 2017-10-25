@@ -94,15 +94,9 @@ def SUB_CAT_SERIES():
 
 
 def abrir_video(video,subtitle):
-     print "funcao abrir_video"
-     try:
-         xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
-         xbmcPlayer.play(video)
-         xbmc.Player().setSubtitles(subtitle)         
-		 
-     except:
-         pass
-         self.message("Erro ao abrir o video.")
+     xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
+     xbmcPlayer.play(video)
+     xbmc.Player().setSubtitles(subtitle)         
 
 def listar_filmes(url):
         codigo_fonte = abrir_url(url)
