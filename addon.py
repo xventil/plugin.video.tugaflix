@@ -94,9 +94,8 @@ def SUB_CAT_SERIES():
 
 
 def abrir_video(video,subtitle):
-     xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
-     xbmcPlayer.play(video)
-     xbmc.Player().setSubtitles(subtitle)         
+     xbmc.Player().play(video)
+     xbmc.Player().setSubtitles(subtitle)
 
 def listar_filmes(url):
         codigo_fonte = abrir_url(url)
