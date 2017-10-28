@@ -23,7 +23,7 @@ h = HTMLParser.HTMLParser()
 
 
 addon_id = 'plugin.video.tugaflix'
-addon_version = '0.4.5'
+addon_version = '0.5.0'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = '/resources/img/'
@@ -94,9 +94,12 @@ def SUB_CAT_SERIES():
 
 
 def abrir_video(video,subtitle):
-     xbmc.Player().play(video)
-     xbmc.Player().setSubtitles(subtitle)
-
+     print "isto e a legenda no resolve_openload " + subtitle
+     player = xbmc.Player()
+     player.setSubtitles(subtitle)
+     player.play(video)
+     
+     
 def listar_filmes(url):
         codigo_fonte = abrir_url(url)
         match=re.compile('<div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4">\s<a href="(.+?)" class="browse-movie-link">\s<figure>\s<img class="img-responsive" src="(.+?)" alt="(.+?)">').findall(codigo_fonte)
@@ -125,8 +128,6 @@ def listar_episodios(url):
 
 def encontrar_fontes(url):
     codigo_fonte=abrir_url(url)
-    print url + " aqui vamos"
-    #print codigo_fonte
     match = re.compile('<source src="(.+?)" type="video/mp4" data-res="servidor.02">').findall(codigo_fonte)
     if not match:
         encontrar_fontes_openload(url+"&C")
@@ -144,6 +145,9 @@ def encontrar_fontes_openload(url):
     codigo_fonte=abrir_url(url)
     match = re.compile('<iframe src="(.+?)" frameborder="0"></iframe><br>').findall(codigo_fonte)
     for captcha in match:
+        resolve_captcha(captcha)
+
+def resolve_captcha(captcha):
         codigo_fonte=abrir_url(captcha)
         imagem = re.compile('value="(.+)">\n<center><img width=".+?" height=".+?" alt="" src="(.+?)"></center>').findall(codigo_fonte)
         for recaptcher, link in imagem:
@@ -180,8 +184,7 @@ def encontrar_fontes_openload(url):
                 movieCode = re.findall('<iframe src="(.+?)mp4..c1_file=(.+?)&c1', str(link2))
                 for ficheiro, legenda in movieCode:
                     resolve_openload(ficheiro, legenda)
-
-
+                    
 def resolve_openload(url, legenda):
     url = url.replace('https://openload.co', 'http://openload.io')
     import urlresolver
