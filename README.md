@@ -9,12 +9,11 @@ for now the addon supports;
 
  search movies and series
  Subtitles (Pt Language only!)**
+ 
  browse with categories
  
  
  
  **
- bugs on kodi 17:
-  - Subtitles not dysplaing
  
  hope you enjoy it!

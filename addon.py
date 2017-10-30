@@ -18,12 +18,12 @@
 
 ##############BIBLIOTECAS A IMPORTAR E DEFINICOES####################
 
-import urllib,urllib2,urlparse,re,xbmcplugin,xbmcgui,xbmc,xbmcaddon,HTMLParser
+import urllib,urllib2,urlparse,re,os.path,xbmcplugin,xbmcgui,xbmc,xbmcaddon,HTMLParser
 h = HTMLParser.HTMLParser()
 
 
 addon_id = 'plugin.video.tugaflix'
-addon_version = '0.5.0'
+addon_version = '0.5.5'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = '/resources/img/'
@@ -94,10 +94,10 @@ def SUB_CAT_SERIES():
 
 
 def abrir_video(video,subtitle):
-     print "isto e a legenda no resolve_openload " + subtitle
      player = xbmc.Player()
-     player.setSubtitles(subtitle)
      player.play(video)
+     player.setSubtitles(subtitle)
+
      
      
 def listar_filmes(url):
@@ -105,10 +105,10 @@ def listar_filmes(url):
         match=re.compile('<div class="browse-movie-wrap col-xs-10 col-sm-4 col-md-5 col-lg-4">\s<a href="(.+?)" class="browse-movie-link">\s<figure>\s<img class="img-responsive" src="(.+?)" alt="(.+?)">').findall(codigo_fonte)
         for url, img, titulo in match:
             addDir(titulo,'http://tugaflix.com/'+ url,2,'http://tugaflix.com/'+img,False)
-        match = re.compile('<ul class="tsc_pagination tsc_paginationA tsc_paginationA06">.+?<a href="(.+?)">Seguinte »</a></li></ul></div>').findall(codigo_fonte)
+        match = re.compile('<li><a href="(.+?)">Seguinte &raquo;</a></li>').findall(codigo_fonte)
         for next_page in match:
             addLink('','','',0,'')
-            addDir('Proximo >>','http://tugaflix.com/'+ next_page,1,'')
+            addDir('Proximo >>','http://tugaflix.com'+ next_page,1,'')
 
 def listar_series(url):
         codigo_fonte = abrir_url(url)

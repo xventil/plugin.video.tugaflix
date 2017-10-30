@@ -1,6 +1,6 @@
-<addon id="plugin.video.tugaflix" name="TugaFlix" provider-name="xventil and m4xc4v413r4" version="0.5.0">   
+<addon id="plugin.video.tugaflix" name="TugaFlix" provider-name="xventil and m4xc4v413r4" version="0.5.5">   
  <requires>   
-    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="xbmc.python" version="2.14.0"/>
     <import addon="script.module.urlresolver"/>
     <import addon="script.module.simplejson" version="3.3.0"/>
     <import addon="script.module.t0mm0.common" />
