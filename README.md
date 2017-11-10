@@ -15,5 +15,8 @@ for now the addon supports;
  
  
  **
+ Subtitiles disabled due to problems with kodi 17
+ Simply use on of the subtitles services available on kodi for now
+ hope to fix this soon
  
  hope you enjoy it!

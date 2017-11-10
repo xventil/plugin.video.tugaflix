@@ -23,10 +23,11 @@ h = HTMLParser.HTMLParser()
 
 
 addon_id = 'plugin.video.tugaflix'
-addon_version = '0.5.5'
+addon_version = '0.6.0'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = '/resources/img/'
+progress = xbmcgui.DialogProgress()
 
 
 ################################################## 
@@ -93,12 +94,10 @@ def SUB_CAT_SERIES():
 #FUNCOES
 
 
-def abrir_video(video,subtitle):
+def abrir_video(video):
+     progress.update(75,'Playing Video')
      player = xbmc.Player()
      player.play(video)
-     player.setSubtitles(subtitle)
-
-     
      
 def listar_filmes(url):
         codigo_fonte = abrir_url(url)
@@ -139,7 +138,7 @@ def encontrar_fontes(url):
             print 'vamos la ver:' + ficheiro
             final = 'http://filehoot.com/vidembed-'+ficheiro+'.mp4'
             legenda = 'http://tugaflix.com/'+legenda
-            abrir_video(final,legenda)
+            abrir_video(final)
 
 def encontrar_fontes_openload(url):
     codigo_fonte=abrir_url(url)
@@ -151,6 +150,7 @@ def resolve_captcha(captcha):
         codigo_fonte=abrir_url(captcha)
         imagem = re.compile('value="(.+)">\n<center><img width=".+?" height=".+?" alt="" src="(.+?)"></center>').findall(codigo_fonte)
         for recaptcher, link in imagem:
+            print (recaptcher + link)
             capimg = "http://www.google.com/recaptcha/api/"+link
             if capimg:
                 img = xbmcgui.ControlImage(550, 20, 600, 114, capimg)
@@ -181,16 +181,20 @@ def resolve_captcha(captcha):
                 response2 = urllib2.urlopen(req2)
                 link2 = response2.read()
                 response2.close()
-                movieCode = re.findall('<iframe src="(.+?)mp4..c1_file=(.+?)&c1', str(link2))
-                for ficheiro, legenda in movieCode:
-                    resolve_openload(ficheiro, legenda)
+                progress.create('Play video', 'Searching videofile.')
+                movieCode = re.findall('<iframe src="(.+?)mp4', str(link2))
+                for ficheiro in movieCode:
+                    ficheiro = ficheiro+"mp4"
+                    progress.update(25,'sending to UrlResolver')
+                    resolve_openload(ficheiro)
                     
-def resolve_openload(url, legenda):
+def resolve_openload(url):
     url = url.replace('https://openload.co', 'http://openload.io')
+    progress.update(30,'Resolving Openload Link')
     import urlresolver
     stream_url = urlresolver.resolve(url)
-    print stream_url
-    abrir_video(stream_url, legenda)
+    progress.update(50,'Found Video')
+    abrir_video(stream_url)
 
 def pesquisa_filmes():
     keyb = xbmc.Keyboard('','Escreva o Filme a Pesquisar')
